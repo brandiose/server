@@ -1,15 +1,15 @@
 const log = require('./log.js');
 const mongodb = require('mongodb');
 const client = mongodb.MongoClient;
-const sndwave = require('../brandiose.config.js');
+const brandiose = require('../brandiose.config.js');
 
 var db;
 var err;
 var wait = [];
 
-client.connect(sndwave.dburl, { useNewUrlParser: true }, function(err,database){
+client.connect(brandiose.dburl, { useNewUrlParser: true }, function(err,database) {
   error = err;
-  db = database.db(sndwave.vedbname);
+  db = database.db(brandiose.vedbname);
 
   wait.forEach(function(callback) {
     callback(err, database);
