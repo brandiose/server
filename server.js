@@ -25,3 +25,4 @@ app.get('/', (req, res) => {
 // 	Users
 // *****************
 app.post('/user', api.user.post);
+app.get('/user', api.user.get);

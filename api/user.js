@@ -1,4 +1,5 @@
 const moment = require('moment');
+const ObjectId = require('mongodb').ObjectID;
 const log = require('../utils/log.js');
 const db = require('../utils/db.js');
 
@@ -36,7 +37,7 @@ module.exports = {
             log.error("brandiose/user [post] user already exists.", req.body);
             res.send({
               status: 409,
-              message: "Account already exists."
+              message: "User already exists."
             });
             return;
           } else {
@@ -52,15 +53,59 @@ module.exports = {
 
               res.send({
                 status: 201,
-                message: 'Account successfully created.'
+                message: 'User successfully created.'
               });
             });
           }
-        })
+        });
     });
   },
   get: (req, res) => {
-    log.success('user:get', req, res);
+    db((err, database) => {
+
+      log.info("users.GET", req.query);
+      if (err) {
+        res.sendStatus(500);
+        log.error(err);
+        return;
+      }
+
+      database
+        .collection('users')
+        .find({
+          $or: [
+            { '_id': { $eq: ObjectId(req.query.id) }},
+            { 'email': { $eq: req.query.email }},
+            { 'username': { $eq: req.query.email }},
+            { 'phone': { $eq: req.query.phone }}
+          ]
+        })
+        .toArray((err, result) => {
+          if (err) {
+            res.sendStatus(500);
+            log.error(err);
+            return;
+          }
+
+          if (result.length > 0) {
+            log.success('brandiose/user [get] user found.', result);
+
+            res.send({
+              status: 200,
+              message: 'User found',
+              body: result
+            });
+          } else {
+            log.warn('brandiose/user [get] user not found.');
+
+            res.send({
+              status: 404,
+              message: 'User not found.',
+              body: []
+            });
+          }
+        });
+    });
   },
   put: (req, res) => {
     log.success('user:put', req, res);
