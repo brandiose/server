@@ -1,0 +1,35 @@
+{
+  "name": "brandiose-server",
+  "version": "0.0.1",
+  "description": "brandiose server back-end package",
+  "main": "server.js",
+  "scripts": {
+    "commitmsg": "commitlint -E GIT_PARAMS",
+    "build:dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemon": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandiose/server.git"
+  },
+  "author": "samueleishion",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brandiose/server/issues"
+  },
+  "homepage": "https://github.com/brandiose/server#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.8"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "@commitlint/config-conventional": "^7.1.2",
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "husky": "^1.1.2",
+    "nodemon": "^1.18.4"
+  }
+}
