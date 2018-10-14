@@ -1,10 +1,11 @@
 const chalk = require('chalk');
+const brandiose = require('../config.js');
 
 const error = chalk.red;
 const warning = chalk.keyword('orange');
 const info = chalk.magenta;
 const success = chalk.green;
-const app = chalk.cyan('brandiose~');
+const app = chalk.cyan(brandiose.appname + '~');
 
 module.exports = {
 	error: function(...message) {

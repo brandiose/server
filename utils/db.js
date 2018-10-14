@@ -1,7 +1,7 @@
 const log = require('./log.js');
 const mongodb = require('mongodb');
 const client = mongodb.MongoClient;
-const brandiose = require('../brandiose.config.js');
+const brandiose = require('../config.js');
 
 var db;
 var err;
