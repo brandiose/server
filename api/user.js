@@ -49,7 +49,7 @@ module.exports = {
                 return log.error(err);
               }
 
-              log.success('brandiose/user [post] daved to db', req.body);
+              log.success('brandiose/user [post] saved to db', req.body);
 
               res.send({
                 status: 201,
