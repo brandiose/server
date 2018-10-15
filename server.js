@@ -26,3 +26,4 @@ app.get('/', (req, res) => {
 // *****************
 app.post('/user', api.user.post);
 app.get('/user', api.user.get);
+app.put('/user/:userid', api.user.put);

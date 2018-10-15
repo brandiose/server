@@ -108,6 +108,37 @@ module.exports = {
     });
   },
   put: (req, res) => {
-    log.success('user:put', req, res);
+    db((err, database) => {
+      log.info("users.PUT", req.params.userid, req.body);
+      if (err) {
+        res.sendStatus(500);
+        log.error(err);
+        return;
+      }
+
+      const query = {
+        '_id': { $eq: ObjectId(req.params.userid )}
+      };
+
+      const values = {
+        $set: req.body
+      };
+
+      database
+        .collection('users')
+        .updateOne(query, values, (err, result) => {
+          if (err) {
+            res.sendStatus(500);
+            log.error(err);
+            return;
+          }
+
+          log.success('brandiose/user [put] user updated.', query, values);
+          res.send({
+            status: 202,
+            message: 'User updated'
+          });
+        });
+    });
   }
 };
