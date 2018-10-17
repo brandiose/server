@@ -33,3 +33,5 @@ app.put('/user/:userid', api.user.put);
 // 	Brands
 // *****************
 app.post('/brand', api.brand.post);
+app.get('/brand', api.brand.get);
+app.get('/brand/:id', api.brand.get);
