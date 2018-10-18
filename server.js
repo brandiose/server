@@ -27,11 +27,21 @@ app.get('/', (req, res) => {
 // *****************
 app.post('/user', api.user.post);
 app.get('/user', api.user.get);
+app.get('/user/:userid', api.user.get);
 app.put('/user/:userid', api.user.put);
 
 // *****************
 // 	Brands
 // *****************
-app.post('/brand', api.brand.post);
-app.get('/brand', api.brand.get);
-app.get('/brand/:id', api.brand.get);
+app.post('/user/:userid/brand', api.brand.post);
+app.get('/brand', api.brand.getByQuery);
+app.get('/brand/:id', api.brand.getById);
+
+app.get('/user/:userid/brand', (req, res) => {
+  let newReq = Object.assign({}, req);
+
+  newReq.query = {};
+  newReq.query.userid = req.params.userid;
+
+  api.brand.getByUserId(newReq, res);
+});

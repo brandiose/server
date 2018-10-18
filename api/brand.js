@@ -3,7 +3,7 @@ const ObjectId = require('mongodb').ObjectID;
 const log = require('../utils/log.js');
 const db = require('../utils/db.js');
 
-module.exports = {
+ let brandApi= {
   post: (req, res) => {
     db((err, database) => {
       if (err) {
@@ -14,7 +14,7 @@ module.exports = {
 
       if (
         req.body.name === undefined ||
-        req.body.userid === undefined
+        req.params.userid === undefined
       ) {
         log.error("brandiose/brand [post] request does not contain name or userid.", req.body);
         res.send({
@@ -29,7 +29,7 @@ module.exports = {
         .find({
           $and: [
             { 'name': { $eq: req.body.name }},
-            { 'userid': { $eq: req.body.userid }}
+            { 'userid': { $eq: req.params.userid }}
           ]
         })
         .toArray((err, result) => {
@@ -40,7 +40,7 @@ module.exports = {
           }
 
           if (result.length > 0) {
-            log.error("brandiose/user [post] user already exists.", req.body);
+            log.error("brandiose/user [post] brand already exists.", req.body);
             res.send({
               status: 409,
               message: "Brand already exists for this user."
@@ -49,6 +49,7 @@ module.exports = {
           } else {
             req.body.created = moment().format("YYYY-MM-DD HH:mm");
             req.body.modified = req.body.created;
+            req.body.userid = req.params.userid;
             database.collection('brands').save(req.body, (err, result) => {
               if (err) {
                 res.sendStatus(500);
@@ -59,14 +60,15 @@ module.exports = {
 
               res.send({
                 status: 201,
-                message: 'Brand successfully created.'
+                message: 'Brand successfully created.',
+                body: req.body
               });
             });
           }
         });
     });
   },
-  get: (req, res) => {
+  get: (req, res, query) => {
     db((err, database) => {
 
       log.info("brands.GET", req.query);
@@ -78,24 +80,21 @@ module.exports = {
 
       database
         .collection('brands')
-        .find({
-          $or: [
-            { '_id': { $eq: ObjectId(req.params.id) }},
-            { 'userid': { $eq: req.query.userid }},
-            {
-              $and: [
-                { '_id': { $eq: ObjectId(req.params.id) }},
-                { 'userid': { $eq: req.query.userid }}
-              ]
-            },
-            {
-              $and: [
-                { 'userid': { $eq: req.query.userid }},
-                { 'name': { $eq: req.query.name }},
-              ]
-            },
-          ]
-        })
+        .find(query)
+        // .find({
+        //   $or: [
+        //     {
+        //       '_id': ObjectId(req.params.id),
+        //       'userid': req.query.userid
+        //     },
+        //     {
+        //       'userid': req.query.userid,
+        //       'name': req.query.name
+        //     },
+        //     { '_id': ObjectId(req.params.id) },
+        //     { 'userid': req.query.userid }
+        //   ]
+        // })
         .toArray((err, result) => {
           if (err) {
             res.sendStatus(500);
@@ -123,6 +122,25 @@ module.exports = {
         });
     });
   },
+  getById: (req, res) => {
+    brandApi.get(req, res, {
+      '_id': ObjectId(req.params.id)
+    });
+  },
+  getByUserId: (req, res) => {
+    brandApi.get(req, res, {
+      'userid': req.query.userid
+    });
+  },
+  getByQuery: (req, res) => {
+    brandApi.get(req, res, {
+      $or: [
+        { 'name': { $eq: req.query.name }}
+      ]
+    });
+  },
   put: (req, res) => {
   }
 };
+
+module.exports = brandApi;

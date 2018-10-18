@@ -53,7 +53,8 @@ module.exports = {
 
               res.send({
                 status: 201,
-                message: 'User successfully created.'
+                message: 'User successfully created.',
+                body: req.body
               });
             });
           }
@@ -74,7 +75,7 @@ module.exports = {
         .collection('users')
         .find({
           $or: [
-            { '_id': { $eq: ObjectId(req.query.id) }},
+            { '_id': { $eq: ObjectId(req.params.id) }},
             { 'email': { $eq: req.query.email }},
             { 'username': { $eq: req.query.email }},
             { 'phone': { $eq: req.query.phone }}
