@@ -69,7 +69,54 @@ const db = require('../utils/db.js');
     });
   },
   get: (req, res, query) => {
+    db((err, database) => {
 
+      log.info("stacks.GET", req.query);
+      if (err) {
+        res.sendStatus(500);
+        log.error(err);
+        return;
+      }
+
+      database
+        .collection('stacks')
+        .find(query)
+        .toArray((err, result) => {
+          if (err) {
+            res.sendStatus(500);
+            log.error(err);
+            return;
+          }
+
+          if (result.length > 0) {
+            log.success('brandiose/stack [get] brand found.', result);
+
+            res.send({
+              status: 200,
+              message: 'Stack(s) found',
+              body: result
+            });
+          } else {
+            log.warn('brandiose/stack [get] stack not found.');
+
+            res.send({
+              status: 404,
+              message: 'Stack(s) not found.',
+              body: []
+            });
+          }
+        });
+    });
+  },
+  getById: (req, res, query) => {
+    brandApi.get(req, res, {
+      '_id': ObjectId(req.params.stackid)
+    });
+  },
+  getByUserId: (req, res, query) => {
+    brandApi.get(req, res, {
+      'userid': req.params.userid
+    })
   },
   put: (req, res) => {
 

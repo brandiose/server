@@ -51,3 +51,5 @@ app.put('/brand/:brandid', api.brand.put);
 // 	Stacks
 // *****************
 app.post('/user/:userid/stack', api.stack.post);
+app.get('/stack/:stackid', api.stack.getById);
+app.get('/user/:userid/stack', api.stack.getByUserId);
