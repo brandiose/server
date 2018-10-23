@@ -40,7 +40,7 @@ const db = require('../utils/db.js');
           }
 
           if (result.length > 0) {
-            log.error("brandiose/user [post] brand already exists.", req.body);
+            log.error("brandiose/brand [post] brand already exists.", req.body);
             res.send({
               status: 409,
               message: "Brand already exists for this user."
@@ -56,7 +56,7 @@ const db = require('../utils/db.js');
                 return log.error(err);
               }
 
-              log.success('brandiose/brands [post] saved to db', req.body);
+              log.success('brandiose/brand [post] saved to db', req.body);
 
               res.send({
                 status: 201,

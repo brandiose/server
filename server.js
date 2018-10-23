@@ -6,7 +6,8 @@ const app = express();
 
 const api = {
   user: require('./api/user.js'),
-  brand: require('./api/brand.js')
+  brand: require('./api/brand.js'),
+  stack: require('./api/stack.js')
 }
 
 app.use(bp.json());
@@ -45,3 +46,8 @@ app.get('/user/:userid/brand', (req, res) => {
   api.brand.getByUserId(newReq, res);
 });
 app.put('/brand/:brandid', api.brand.put);
+
+// *****************
+// 	Stacks
+// *****************
+app.post('/user/:userid/stack', api.stack.post);
