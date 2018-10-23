@@ -81,20 +81,6 @@ const db = require('../utils/db.js');
       database
         .collection('brands')
         .find(query)
-        // .find({
-        //   $or: [
-        //     {
-        //       '_id': ObjectId(req.params.id),
-        //       'userid': req.query.userid
-        //     },
-        //     {
-        //       'userid': req.query.userid,
-        //       'name': req.query.name
-        //     },
-        //     { '_id': ObjectId(req.params.id) },
-        //     { 'userid': req.query.userid }
-        //   ]
-        // })
         .toArray((err, result) => {
           if (err) {
             res.sendStatus(500);
@@ -124,7 +110,7 @@ const db = require('../utils/db.js');
   },
   getById: (req, res) => {
     brandApi.get(req, res, {
-      '_id': ObjectId(req.params.id)
+      '_id': ObjectId(req.params.brandid)
     });
   },
   getByUserId: (req, res) => {
@@ -140,6 +126,40 @@ const db = require('../utils/db.js');
     });
   },
   put: (req, res) => {
+    db((err, database) => {
+      log.info("brands.PUT", req.params.brandid, req.body);
+      if (err) {
+        res.sendStatus(500);
+        log.error(err);
+        return;
+      }
+
+      req.body.modified = moment().format("YYYY-MM-DD HH:mm");
+
+      const query = {
+        '_id': { $eq: ObjectId(req.params.brandid )}
+      };
+
+      const values = {
+        $set: req.body
+      };
+
+      database
+        .collection('brands')
+        .updateOne(query, values, (err, result) => {
+          if (err) {
+            res.sendStatus(500);
+            log.error(err);
+            return;
+          }
+
+          log.success('brandiose/brand [put] brand updated.', query, values);
+          res.send({
+            status: 202,
+            message: 'Brand updated'
+          });
+        });
+    });
   }
 };
 

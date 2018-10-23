@@ -117,6 +117,8 @@ module.exports = {
         return;
       }
 
+      req.body.modified = moment().format("YYYY-MM-DD HH:mm");
+
       const query = {
         '_id': { $eq: ObjectId(req.params.userid )}
       };

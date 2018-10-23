@@ -35,8 +35,7 @@ app.put('/user/:userid', api.user.put);
 // *****************
 app.post('/user/:userid/brand', api.brand.post);
 app.get('/brand', api.brand.getByQuery);
-app.get('/brand/:id', api.brand.getById);
-
+app.get('/brand/:brandid', api.brand.getById);
 app.get('/user/:userid/brand', (req, res) => {
   let newReq = Object.assign({}, req);
 
@@ -45,3 +44,4 @@ app.get('/user/:userid/brand', (req, res) => {
 
   api.brand.getByUserId(newReq, res);
 });
+app.put('/brand/:brandid', api.brand.put);
