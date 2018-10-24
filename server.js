@@ -7,8 +7,9 @@ const app = express();
 const api = {
   user: require('./api/user.js'),
   brand: require('./api/brand.js'),
-  stack: require('./api/stack.js')
-}
+  stack: require('./api/stack.js'),
+  contact: require('./api/contact.js')
+};
 
 app.use(bp.json());
 app.use(bp.urlencoded({
@@ -54,3 +55,8 @@ app.post('/user/:userid/stack', api.stack.post);
 app.get('/stack/:stackid', api.stack.getById);
 app.get('/user/:userid/stack', api.stack.getByUserId);
 app.put('/stack/:stackid', api.stack.put);
+
+// *****************
+// 	Contacts
+// *****************
+app.post('/user/:userid/stack/:stackid/contact', api.contact.post);
