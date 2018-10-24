@@ -119,7 +119,40 @@ const db = require('../utils/db.js');
     })
   },
   put: (req, res) => {
+    db((err, database) => {
+      log.info("stack.PUT", req.params.stackid, req.body);
+      if (err) {
+        res.sendStatus(500);
+        log.error(err);
+        return;
+      }
 
+      req.body.modified = moment().format("YYYY-MM-DD HH:mm");
+
+      const query = {
+        '_id': { $eq: ObjectId(req.params.stackid )}
+      };
+
+      const values = {
+        $set: req.body
+      };
+
+      database
+        .collection('stacks')
+        .updateOne(query, values, (err, result) => {
+          if (err) {
+            res.sendStatus(500);
+            log.error(err);
+            return;
+          }
+
+          log.success('brandiose/stack [put] stack updated.', query, values);
+          res.send({
+            status: 202,
+            message: 'Stack updated'
+          });
+        });
+    });
   }
 };
 
