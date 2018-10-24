@@ -61,3 +61,4 @@ app.put('/stack/:stackid', api.stack.put);
 // *****************
 app.post('/user/:userid/stack/:stackid/contact', api.contact.post);
 app.get('/user/:userid/stack/:stackid/contact', api.contact.get);
+app.put('/contact/:contactid', api.contact.put);

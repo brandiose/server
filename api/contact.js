@@ -117,7 +117,40 @@ let brandApi= {
    });
   },
   put: (req, res) => {
+    db((err, database) => {
+      log.info("contacts.PUT", req.params.contactid, req.body);
+      if (err) {
+        res.sendStatus(500);
+        log.error(err);
+        return;
+      }
 
+      req.body.modified = moment().format("YYYY-MM-DD HH:mm");
+
+      const query = {
+        '_id': { $eq: ObjectId(req.params.contactid )}
+      };
+
+      const values = {
+        $set: req.body
+      };
+
+      database
+        .collection('contacts')
+        .updateOne(query, values, (err, result) => {
+          if (err) {
+            res.sendStatus(500);
+            log.error(err);
+            return;
+          }
+
+          log.success('brandiose/contact [put] contact updated.', query, values);
+          res.send({
+            status: 202,
+            message: 'Contact updated'
+          });
+        });
+    });
   }
 };
 
