@@ -52,6 +52,7 @@ let brandApi= {
            req.body.created = moment().format("YYYY-MM-DD HH:mm");
            req.body.modified = req.body.created;
            req.body.userid = req.params.userid;
+           req.body.stackid = req.params.stackid;
            database.collection('contacts').save(req.body, (err, result) => {
              if (err) {
                res.sendStatus(500);
@@ -69,13 +70,55 @@ let brandApi= {
          }
        });
    });
- },
- get: (req, res) => {
+  },
+  get: (req, res) => {
+   db((err, database) => {
 
- },
- put: (req, res) => {
+     log.info("contacts.GET", req.query);
+     if (err) {
+       res.sendStatus(500);
+       log.error(err);
+       return;
+     }
 
- }
+     database
+       .collection('contacts')
+       .find({
+         $and: [
+           { 'userid': { $eq: req.params.userid }},
+           { 'stackid': { $eq: req.params.stackid }}
+         ]
+       })
+       .toArray((err, result) => {
+         if (err) {
+           res.sendStatus(500);
+           log.error(err);
+           return;
+         }
+
+         if (result.length > 0) {
+           log.success('brandiose/contact [get] contact found.', result);
+
+           res.send({
+             status: 200,
+             message: 'Contact found',
+             body: result
+           });
+         } else {
+           log.warn('brandiose/contact [get] contact not found.');
+
+           res.send({
+             status: 404,
+             message: 'Contact not found.',
+             body: []
+           });
+         }
+       });
+   });
+  },
+  put: (req, res) => {
+
+  }
 };
 
  module.exports = brandApi;
